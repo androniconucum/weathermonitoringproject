@@ -331,11 +331,13 @@ return (
           ? `${value} hPa` 
           : title === 'Rain (mm)' 
           ? `${value} mm`
+          : title === 'Temperature (°C)' 
+          ? `${value} °c`
           : title === 'Humidity (%)'
           ? `${value} %`
           : title === 'Light'
           ? `${value}`
-          : `${value} °C`
+          : `${value} Lux`
            }
            </text> 
 
