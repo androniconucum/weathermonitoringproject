@@ -513,41 +513,35 @@ return (
   
   const getLightLabel = (lightValue, theme) => {
     const darkColors = {
-      veryDark: { label: "Very Dark", labelColor: "#1F2937", indicatorColor: "#4B5563" },
-      dark: { label: "Dark", labelColor: "#374151", indicatorColor: "#6B7280" },
-      dimLight: { label: "Dim Light", labelColor: "#4B5563", indicatorColor: "#9CA3AF" },
-      mediumLight: { label: "Medium Light", labelColor: "#854D0E", indicatorColor: "#D97706" },
-      brightLight: { label: "Bright", labelColor: "#064E3B", indicatorColor: "#10B981" },
-      veryBright: { label: "Very Bright", labelColor: "#1E3A8A", indicatorColor: "#3B82F6" }
+      veryDark: { label: "No Light", labelColor: "#1F2937", indicatorColor: "#4B5563" },
+      darkIndoor: { label: "Indoor Dim", labelColor: "#374151", indicatorColor: "#6B7280" },
+      lowLight: { label: "Low Light", labelColor: "#4B5563", indicatorColor: "#9CA3AF" },
+      ambientLight: { label: "Ambient Light", labelColor: "#854D0E", indicatorColor: "#D97706" },
+      bright: { label: "Bright", labelColor: "#064E3B", indicatorColor: "#10B981" },
+      daylight: { label: "Very Bright", labelColor: "#1E3A8A", indicatorColor: "#3B82F6" },
+      brightSunlight: { label: "Bright Sunlight", labelColor: "#7F1D1D", indicatorColor: "#EF4444" }
     };
   
     const lightColors = {
-      veryDark: { label: "Very Dark", labelColor: "#E5E7EB", indicatorColor: "#9CA3AF" },
-      dark: { label: "Dark", labelColor: "#F3F4F6", indicatorColor: "#6B7280" },
-      dimLight: { label: "Dim Light", labelColor: "#F9FAFB", indicatorColor: "#D1D5DB" },
-      mediumLight: { label: "Medium Light", labelColor: "#FEF3C7", indicatorColor: "#FBBF24" },
-      brightLight: { label: "Bright", labelColor: "#DCFCE7", indicatorColor: "#4CAF50" },
-      veryBright: { label: "Very Bright", labelColor: "#BFDBFE", indicatorColor: "#2196F3" }
+      veryDark: { label: "No Light", labelColor: "#E5E7EB", indicatorColor: "#9CA3AF" },
+      darkIndoor: { label: "Indoor Dim", labelColor: "#F3F4F6", indicatorColor: "#6B7280" },
+      lowLight: { label: "Low Light", labelColor: "#F9FAFB", indicatorColor: "#D1D5DB" },
+      ambientLight: { label: "Ambient Light", labelColor: "#FEF3C7", indicatorColor: "#FBBF24" },
+      brightIndoor: { label: "Bright Indoor", labelColor: "#DCFCE7", indicatorColor: "#4CAF50" },
+      daylight: { label: "Daylight", labelColor: "#BFDBFE", indicatorColor: "#2196F3" },
+      brightSunlight: { label: "Bright Sunlight", labelColor: "#FEE2E2", indicatorColor: "#F44336" }
     };
   
     const colors = theme === 'dark' ? darkColors : lightColors;
   
-    // More granular thresholds and dynamic indicator colors
-    if (lightValue >= 990) return colors.veryBright;
-    if (lightValue >= 700) return { 
-      ...colors.brightLight, 
-      indicatorColor: `hsl(${Math.floor((lightValue - 700) / 200 * 60 + 120)}, 70%, 50%)` 
-    };
-    if (lightValue >= 500) return { 
-      ...colors.mediumLight, 
-      indicatorColor: `hsl(${Math.floor((lightValue - 500) / 200 * 60 + 60)}, 70%, 50%)` 
-    };
-    if (lightValue >= 300) return { 
-      ...colors.dimLight, 
-      indicatorColor: `hsl(${Math.floor((lightValue - 300) / 200 * 60)}, 70%, 50%)` 
-    };
-    if (lightValue >= 100) return colors.dark;
-    return colors.veryDark;
+    // More granular thresholds for light conditions
+    if (lightValue < 50) return colors.veryDark;
+    if (lightValue < 200) return colors.darkIndoor;
+    if (lightValue < 400) return colors.lowLight;
+    if (lightValue < 600) return colors.ambientLight;
+    if (lightValue < 990) return colors.bright;
+    if (lightValue < 1000) return colors.daylight;
+    return colors.brightSunlight;
   };
 
   

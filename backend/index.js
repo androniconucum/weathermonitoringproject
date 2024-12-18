@@ -104,11 +104,11 @@ const RATE_LIMIT_TIME = 2 * 60 * 1000;
 class WeatherDataManager {
   constructor() {
     this.weatherData = [];
-    this.dataCounter = 0; // Counter to track the number of data received
+    this.dataCounter = 0;
     this.historicalRef = db.ref('weather_history');
     this.currentWeatherRef = db.ref('weather_now');
-    this.lastEmailSentTime = 0; // Track the last time an email was sent
-    this.conditionFlags = {}; // Track if a specific condition has triggered an email
+    this.lastEmailSentTime = 0;
+    this.conditionFlags = {};
   }
 
   async addData(data) {
@@ -149,7 +149,7 @@ class WeatherDataManager {
   }
 
   checkWeatherConditionsAndSendAlerts(data) {
-    const { temperature, rain, pressure } = data;
+    const { temperature, rain, pressure, light } = data;
     const currentTime = Date.now();
   
     // Reset ALL flags and last email time after 1 minute
@@ -189,6 +189,29 @@ class WeatherDataManager {
       );
       this.lastEmailSentTime = currentTime;
       this.conditionFlags['lowPressure'] = true;
+    }
+  }
+
+  // Light Condition Alert
+  // For very bright conditions (high light value)
+  if (light > 950) {
+    if (!this.conditionFlags['brightConditions']) {
+      sendEmailToAllUsers('☀️ Extremely Bright Conditions Alert! ☀️',           
+        `🚨 NOTICE: Extremely high light detected (Light Value: ${light})! 🌞 It might be direct sunlight or very bright environment. Be cautious of potential sun exposure! 🕶️`
+      );
+      this.lastEmailSentTime = currentTime;
+      this.conditionFlags['brightConditions'] = true;
+    }
+  }
+
+   // For very dark conditions ( light value)
+  if (light < 120) {
+    if (!this.conditionFlags['darkConditions']) {
+      sendEmailToAllUsers('🌑 Extremely Dark Conditions Alert! 🌑', 
+        `🚨 NOTICE: Extremely low light detected (Light Value: ${light})! 🔦 It might be nighttime or heavy cloud cover. Take necessary precautions! 🌚`
+      );
+      this.lastEmailSentTime = currentTime;
+      this.conditionFlags['darkConditions'] = true;
     }
   }
 }
